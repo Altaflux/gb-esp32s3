@@ -10,6 +10,6 @@ impl AudioPlayer for NullAudioPlayer {
     }
 
     fn underflowed(&self) -> bool {
-        true
+        false
     }
 }

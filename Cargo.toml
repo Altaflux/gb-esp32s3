@@ -19,7 +19,7 @@ esp-alloc = { version = "0.5.0" }
 embedded-hal = { version = "1.0.0" }
 embedded-sdmmc = "0.8.0"
 const-lru = "1.0.0"
-gb-core = { path = "C:\\Users\\pablo\\projects\\rust-gb\\gb-core" }
+gb-core = { git = "https://github.com/Altaflux/rust-gb.git" }
 #Graphics stack
 display-interface = "0.5.0"
 display-interface-spi = "0.5.0"
@@ -35,16 +35,62 @@ embedded-hal-bus = { version = "0.2.0", features = ["defmt-03"] }
 # We aren't using this, but embedded-hal-bus 0.2 unconditionally requires atomics.
 # Should be fixed in e-h-b 0.3 via https://github.com/rust-embedded/embedded-hal/pull/607
 portable-atomic = { version = "1.7.0", features = ["critical-section"] }
-[profile.dev]
-# Rust debug is too slow.
-# For debug builds always builds with some optimization
-opt-level = "s"
+# [profile.dev]
+# # Rust debug is too slow.
+# # For debug builds always builds with some optimization
+# opt-level = "s"
 
+# [profile.release]
+# codegen-units = 1        # LLVM can perform better optimizations using a single thread
+# debug = 2
+# debug-assertions = false
+# incremental = false
+# lto = 'fat'
+# opt-level = 's'
+# overflow-checks = false
+
+
+# cargo build/run
+[profile.dev]
+codegen-units = 1
+debug = true
+debug-assertions = true
+incremental = false
+opt-level = 0
+overflow-checks = true
+
+# cargo build/run --release
 [profile.release]
-codegen-units = 1        # LLVM can perform better optimizations using a single thread
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 3
+overflow-checks = false
+panic = "abort"
+
+# do not optimize proc-macro crates = faster builds from scratch
+[profile.dev.build-override]
+codegen-units = 8
+debug = false
+debug-assertions = false
+opt-level = 0
+overflow-checks = false
+
+[profile.release.build-override]
+codegen-units = 1
+debug = false
+debug-assertions = false
+opt-level = 3
+overflow-checks = false
+
+
+# cargo test --release
+[profile.bench]
+codegen-units = 1
 debug = 2
 debug-assertions = false
 incremental = false
 lto = 'fat'
-opt-level = 's'
-overflow-checks = false
+opt-level = 3

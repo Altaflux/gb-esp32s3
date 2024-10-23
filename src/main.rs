@@ -150,23 +150,27 @@ fn main() -> ! {
     display.clear_screen(0xf9b0).unwrap();
 
     let mut loop_counter: usize = 0;
+    let mut sample_count: usize = 0;
     loop {
         // display.clear_screen(0xf9b0).unwrap();
         // display.clear_screen(0x423f).unwrap();
         // log::info!("Hello world!");
         let start_time = esp_hal::time::now();
-        display
-            .draw_raw_iter(
-                0,
-                0,
-                (SCREEN_HEIGHT - 1) as u16,
-                (SCREEN_WIDTH - 1) as u16,
-                scaler.scale_iterator(GameEmulationHandler::new(
-                    &mut gameboy,
-                    &mut NullButtonHandler,
-                )),
-            )
-            .unwrap();
+        for x in (GameEmulationHandler::new(&mut gameboy, &mut NullButtonHandler)) {
+            sample_count = sample_count.saturating_add(1);
+        }
+        // display
+        //     .draw_raw_iter(
+        //         0,
+        //         0,
+        //         (SCREEN_HEIGHT - 1) as u16,
+        //         (SCREEN_WIDTH - 1) as u16,
+        //         scaler.scale_iterator(GameEmulationHandler::new(
+        //             &mut gameboy,
+        //             &mut NullButtonHandler,
+        //         )),
+        //     )
+        //     .unwrap();
 
         let end_time = esp_hal::time::now();
         let diff = end_time - start_time;

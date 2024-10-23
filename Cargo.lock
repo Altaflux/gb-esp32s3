@@ -606,6 +606,7 @@ dependencies = [
 [[package]]
 name = "gb-core"
 version = "0.1.0"
+source = "git+https://github.com/Altaflux/rust-gb.git#dd624dd298a904baaae9d13fa74f6ff12600a3e1"
 dependencies = [
  "arrayvec",
  "bitflags 2.6.0",

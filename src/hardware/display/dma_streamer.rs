@@ -110,7 +110,6 @@ where
             width_position += 2;
             if width_position == tx_buffer.capacity() {
                 tx_buffer.set_length(width_position);
-
                 tx_buffer = transfer.send_scanline(tx_buffer);
                 width_position = 0;
             }

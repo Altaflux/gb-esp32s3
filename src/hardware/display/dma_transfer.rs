@@ -38,17 +38,20 @@ where
             dma: Some(DmaState::IDLE(spi)),
         }
     }
+
+    #[inline(always)]
     pub fn do_transfer(&mut self, buffer: DmaTxBuf) -> DmaTxBuf {
-        let dma_state: DmaState<'d, T, M> = core::mem::replace(&mut self.dma, None).unwrap();
-        let (spi, spare_buffer) = match dma_state {
-            DmaState::IDLE(spi_dma) => {
-                let second_buffer = core::mem::replace(&mut self.spare_buffer, None).unwrap();
-                (spi_dma, second_buffer)
-            }
-            DmaState::RUNNING(spi_dma_transfer) => spi_dma_transfer.wait(),
-        };
-        self.dma = Some(DmaState::RUNNING(spi.dma_write(buffer).unwrap()));
-        spare_buffer
+        // let dma_state: DmaState<'d, T, M> = core::mem::replace(&mut self.dma, None).unwrap();
+        // let (spi, spare_buffer) = match dma_state {
+        //     DmaState::IDLE(spi_dma) => {
+        //         let second_buffer = core::mem::replace(&mut self.spare_buffer, None).unwrap();
+        //         (spi_dma, second_buffer)
+        //     }
+        //     DmaState::RUNNING(spi_dma_transfer) => spi_dma_transfer.wait(),
+        // };
+        // self.dma = Some(DmaState::RUNNING(spi.dma_write(buffer).unwrap()));
+        // spare_buffer
+        buffer
     }
 
     pub fn free(mut self) -> (SpiDma<'d, T, FullDuplexMode, M>, DmaTxBuf) {

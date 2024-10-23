@@ -17,7 +17,7 @@ pub struct SdRomManager<
     rom_name: String,
     root_dir: RefCell<embedded_sdmmc::Directory<'a, D, T, MAX_DIRS, MAX_FILES, MAX_VOLUMES>>,
     bank_0: Box<[u8; 0x4000]>,
-    bank_lru: RefCell<ConstLru<usize, Box<[u8; 0x4000]>, 3, u8>>,
+    bank_lru: RefCell<ConstLru<usize, Box<[u8; 0x4000]>, 4, u8>>,
     start_time: Instant,
     timer: Box<dyn Timer>,
 }
