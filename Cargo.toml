@@ -1,0 +1,45 @@
+[package]
+name = "gb-esp32s3"
+version = "0.1.0"
+authors = ["Pablo Lozano <4032486+Altaflux@users.noreply.github.com>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+esp-backtrace = { version = "0.14.2", features = [
+    "esp32s3",
+    "exception-handler",
+    "panic-handler",
+    "println",
+] }
+esp-hal = { version = "0.21.0", features = ["esp32s3"] }
+esp-println = { version = "0.12.0", features = ["esp32s3", "log"] }
+log = { version = "0.4.22" }
+esp-alloc = { version = "0.5.0" }
+embedded-hal = { version = "1.0.0" }
+#Graphics stack
+display-interface = "0.5.0"
+display-interface-spi = "0.5.0"
+embedded-graphics-core = "0.4.0"
+ili9341 = { version = "0.6.0", features = [
+    "embedded-graphics-core",
+    "graphics",
+], default-features = false }
+
+embedded-hal-bus = { version = "0.2.0", features = ["defmt-03"] }
+# We aren't using this, but embedded-hal-bus 0.2 unconditionally requires atomics.
+# Should be fixed in e-h-b 0.3 via https://github.com/rust-embedded/embedded-hal/pull/607
+portable-atomic = { version = "1.7.0", features = ["critical-section"] }
+[profile.dev]
+# Rust debug is too slow.
+# For debug builds always builds with some optimization
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1        # LLVM can perform better optimizations using a single thread
+debug = 2
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
