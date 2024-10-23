@@ -9,6 +9,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37bf3594c4c988a53154954629820791dde498571819ae4ca50ca811e060cc95"
 
 [[package]]
+name = "arrayvec"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
+
+[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -82,6 +88,15 @@ name = "chrono"
 version = "0.4.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a21f936df1771bf62b77f047b726c4625ff2e8aa607c01ec06e5a05bd8463401"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
+name = "const-lru"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "df6e177825970fee44e66f247adbfd1844480027d21e64ccec91e6e7579c2ad0"
 dependencies = [
  "num-traits",
 ]
@@ -333,6 +348,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "embedded-sdmmc"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "150f320125310e179b9e73b081173b349e63c5c7d4ca44db4e5b9121b10387ec"
+dependencies = [
+ "byteorder",
+ "embedded-hal 1.0.0",
+ "heapless",
+ "log",
+]
+
+[[package]]
 name = "enum-as-inner"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -577,20 +604,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "gb-core"
+version = "0.1.0"
+dependencies = [
+ "arrayvec",
+ "bitflags 2.6.0",
+ "log",
+ "num-derive",
+ "num-traits",
+]
+
+[[package]]
 name = "gb-esp32s3"
 version = "0.1.0"
 dependencies = [
+ "const-lru",
  "display-interface",
  "display-interface-spi",
  "embedded-graphics-core",
  "embedded-hal 1.0.0",
  "embedded-hal-bus",
+ "embedded-sdmmc",
  "esp-alloc",
  "esp-backtrace",
  "esp-hal",
  "esp-println",
+ "gb-core",
  "ili9341",
  "log",
+ "num-traits",
  "portable-atomic",
 ]
 
@@ -657,6 +699,12 @@ dependencies = [
  "equivalent",
  "hashbrown",
 ]
+
+[[package]]
+name = "libm"
+version = "0.2.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ec2a862134d2a7d32d7983ddcdd1c4923530833c9f2ea1a44fc5fa473989058"
 
 [[package]]
 name = "linked_list_allocator"
@@ -726,12 +774,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d5439c4ad607c3c23abf66de8c8bf57ba8adcd1f129e699851a6e43935d339d"
 
 [[package]]
+name = "num-derive"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed3955f1a9c7c0c15e092f9c887db08b1fc683305fdf6eb6684f22555355e202"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.82",
+]
+
+[[package]]
 name = "num-traits"
 version = "0.2.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841"
 dependencies = [
  "autocfg",
+ "libm",
 ]
 
 [[package]]
