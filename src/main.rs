@@ -39,7 +39,11 @@ fn init_heap() {
 #[entry]
 fn main() -> ! {
     #[allow(unused)]
-    let peripherals = esp_hal::init(esp_hal::Config::default());
+    let mut default_cfg = esp_hal::Config::default();
+    default_cfg.cpu_clock = CpuClock::max();
+    let mut default_cfg2 = esp_hal::Config::default();
+    default_cfg2.cpu_clock = CpuClock::max();
+    let peripherals = esp_hal::init(default_cfg2);
     let delay = Delay::new();
 
     init_heap();
@@ -55,7 +59,7 @@ fn main() -> ! {
 
     led.set_high();
 
-    log::info!("START ROM LOAD");
+    log::info!("START ROM LOAD: {:?}", default_cfg.cpu_clock);
     /////////SDCARD
     let sclk = io.pins.gpio38;
     let miso = io.pins.gpio39;
@@ -86,7 +90,7 @@ fn main() -> ! {
     boot_rom_file.read(&mut *boot_rom_data).unwrap();
     boot_rom_file.close().unwrap();
 
-    let roms = gameboy::rom::SdRomManager::new("sml.gb", root_dir, Box::new(timer1));
+    let roms = gameboy::rom::SdRomManager::new("sml.gb", root_dir, Box::new(timer0));
     let gb_rom = gb_core::hardware::rom::Rom::from_bytes(roms);
     let cartridge = gb_rom.into_cartridge();
 
@@ -97,7 +101,7 @@ fn main() -> ! {
     log::info!("ROM DATA LOADED");
 
     //GAMEBOY INIT
-    let screen = GameboyLineBufferDisplay::new(Box::new(timer0));
+    let screen = GameboyLineBufferDisplay::new(Box::new(timer1));
     let mut gameboy = GameBoy::create(screen, cartridge, boot_rom, Box::new(NullAudioPlayer));
 
     let mut loop_counter: usize = 0;
@@ -112,10 +116,11 @@ fn main() -> ! {
         let diff = end_time - start_time;
         let milliseconds = diff.to_millis();
         log::info!(
-            "Loop: {}, Time elapsed: {}:{}",
+            "Loop: {}, Time elapsed: {}:{}  CLOCK: {:?}",
             loop_counter,
             milliseconds / 1000,
-            milliseconds % 1000
+            milliseconds % 1000,
+            default_cfg.cpu_clock
         );
         loop_counter += 1;
     }
